@@ -6,6 +6,9 @@ from django.http import HttpResponse
 def home(request):
     return render(request, 'mapthat/index.html')
 
+def signup(request):
+    return render(request, 'mapthat/signup.html')
+
 def login(request):
     return render(request, 'mapthat/login.html')
 
