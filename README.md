@@ -1,1 +1,2 @@
 # MapThat
+By Sam Alston
