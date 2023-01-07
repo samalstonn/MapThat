@@ -11,11 +11,22 @@ Login
     {% csrf_token %}
     <div class="row justify-content-center align-items-center">
       <img class="mb-4" src="{% static 'mapthat/map-icon.svg' %}" alt="" width="72" height="57">
-      <h2 class="h3 mb-3 fw-normal">Log in to MapThat!</h2>
+      <h2 class="h3 mb-3 fw-normal">MapThat!</h2>
     </div>
     <hr>
     {% for field in loginform %}
-    {{ field }}
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text">
+          {% if field.name == 'username' %}
+          <i class="fa fa-user"></i>
+          {% elif field.name == 'password' %}
+          <i class="fa fa-lock"></i>
+          {% endif %}
+        </span>
+      </div>
+      {{ field }}
+    </div>
     <div class="mt-3"></div>
     {% endfor %}
 
