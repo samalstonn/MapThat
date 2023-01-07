@@ -3,18 +3,32 @@
 {% block title %}
 Sign Up
 {% endblock %}
+{% block head %}
+{% endblock %}
 
 {% load static %}
 
 {% block content %}
+
 <main class="signup-form">
+  {% if error %}
+  <!-- Error Alert -->
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="fa fa-exclamation-circle"></i>
+    <strong>Error!</strong> {{message}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  </div>
+  {% endif %}
   <form method="post">
     {% csrf_token %}
     <div class="row justify-content-center align-items-center">
       <img class="mb-4" src="{% static 'mapthat/map-icon.svg' %}" alt="" width="72" height="57">
-      <h2 class="h3 mb-3 fw-normal">MapThat!</h2>
+      <div class="text-center">
+        <h2 class="h3 mb-3 fw-normal ">MapThat!</h2>
 
-      <p>Your mapping future starts now!</p>
+        <p>Your mapping future starts now!</p>
+      </div>
     </div>
     <hr>
 
