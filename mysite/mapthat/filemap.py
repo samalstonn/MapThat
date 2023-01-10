@@ -21,6 +21,7 @@ def makemapzip(file, currmap):
 
     # Convert to Records
     records = df.to_records()
+    print(records)
 
     # Add the markers from records
     for record in records:

@@ -8,6 +8,8 @@ from django import forms
 from . import filemap
 from .models import Map, colorchoices
 from django.db.utils import IntegrityError
+from .makemap import makemap
+import folium
 
 # Create your views here.
 
@@ -86,6 +88,14 @@ def login(request, context={}):
     return render(request, 'mapthat/login.html', context)
 
 
+def map(request, currmap, icon):
+    map = makemap(currmap, icon)
+    context = {
+        'map': map.get_root().render()
+    }
+    return render(request, 'mapthat/map_template.html', context)
+
+
 def manual(request, context={}):
     return render(request, 'mapthat/manual.html', context)
 
@@ -94,6 +104,7 @@ def upload(request):
     if request.method == 'POST':
         uploadform = UploadForm(request.POST, request.FILES)
         mapform = MapForm(request.POST)
+        iconform = IconForm(request.POST)
         if mapform.is_valid():
             currmap = Map(
                 name=mapform.cleaned_data['name'],
@@ -103,8 +114,12 @@ def upload(request):
                 tiles=mapform.cleaned_data['tiles'])
             currmap.save()
         if uploadform.is_valid():
-            filemap.makemapzip(request.FILES['file'], currmap)
-        return map(request, currmap)
+            if iconform.is_valid():
+                icon = folium.Icon(color=iconform.cleaned_data['color'],
+                                   icon_color=iconform.cleaned_data['icon_color'],
+                                   icon=iconform.cleaned_data['icon'], angle=0, prefix='fa')
+            newmap = filemap.makemapzip(request.FILES['file'], currmap)
+        return map(request, newmap, icon)
     else:
         mapform = MapForm()
         uploadform = UploadForm()
