@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from .models import Map, colorchoices
 
 
 class LoginForm(forms.Form):
@@ -51,3 +52,52 @@ class SignupForm(forms.Form):
                 "password and confirmpassword does not match",
                 code='password_mismatch',
             )
+
+
+jawg_sunny = 'https://{s}.tile.jawg.io/jawg-sunny/{z}/{x}/{y}{r}.png?access-token=NNdSw2xyKpeRRVkxyW5H3FDsS9bmZfT8HQUCPmc9inyy5aRHEQyf20H4pTeCGBbK'
+map_choices = [
+    (jawg_sunny, 'Jawg Sunny'),
+    ('Stamen Terrain', 'Stamen Terrain'), ('Stamen Toner', 'Stamen Toner'),
+    ('Stamen Watercolor', 'Stamen Watercolor'), ('CartoDB positron', 'CartoDB positron')
+]
+
+
+class MapForm(forms.Form):
+    name = forms.CharField(label='Map Name', max_length=100,
+                           widget=forms.TextInput(attrs={'placeholder': 'Your Map\'s Name'}))
+    location_latitude = forms.FloatField(label='Latitude (Map Center)', required=False,
+                                         initial=37.8283)
+    location_longitude = forms.FloatField(label='Longitude (Map Center)', required=False,
+                                          initial=-95.5795)
+    zoom = forms.FloatField(label='Zoom', required=False, initial=4.5)
+    tiles = forms.ChoiceField(label='Map Tiles (Background)', initial=jawg_sunny,
+                              choices=map_choices)
+
+
+class MarkerForm(forms.Form):
+    latitude = forms.FloatField(label='Latitude',
+                                widget=forms.TextInput(attrs={'placeholder': 42.447373}))
+    longitude = forms.FloatField(label='Longitude',
+                                 widget=forms.TextInput(attrs={'placeholder': -76.483703}))
+    color = forms.ChoiceField(
+        label='Color', initial='red', choices=colorchoices)
+    popup = forms.CharField(label='Popup', required=False,
+                            widget=forms.TextInput(attrs={'placeholder': 'Cornell University'}))
+    tooltip = forms.CharField(label='Tooltip', required=False,
+                              widget=forms.TextInput(attrs={'placeholder': 'Go Big Red!'}))
+
+
+class IconForm(forms.Form):
+
+    icon = forms.CharField(label='Icon', required=False,
+                           widget=forms.TextInput(attrs={'placeholder': 'fa-bank'}))
+    icon_color = forms.ChoiceField(
+        label='Icon Color', initial='white', choices=colorchoices)
+    color = forms.ChoiceField(
+        label='Outer Color', initial='red', choices=colorchoices)
+
+
+class UploadForm(forms.Form):
+    file = forms.FileField(label='Upload a .xlsx file')
+    type = forms.ChoiceField(label='Type', choices=[(
+        'zipcode', 'Zipcode'), ('latlong', 'Latitude/Longitude')])

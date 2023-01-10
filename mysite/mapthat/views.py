@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.http import request
-from .forms import LoginForm, SignupForm, PasswordMatchError
+from .forms import LoginForm, SignupForm, IconForm, MapForm, UploadForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib import messages
 from django import forms
+from . import filemap
+from .models import Map, colorchoices
 from django.db.utils import IntegrityError
 
 # Create your views here.
@@ -84,17 +86,40 @@ def login(request, context={}):
     return render(request, 'mapthat/login.html', context)
 
 
-def manual(request):
-    return render(request, 'mapthat/manual.html')
+def manual(request, context={}):
+    return render(request, 'mapthat/manual.html', context)
 
 
 def upload(request):
-    return render(request, 'mapthat/upload.html')
+    if request.method == 'POST':
+        uploadform = UploadForm(request.POST, request.FILES)
+        mapform = MapForm(request.POST)
+        if mapform.is_valid():
+            currmap = Map(
+                name=mapform.cleaned_data['name'],
+                location_latitude=mapform.cleaned_data['location_latitude'],
+                location_longitude=mapform.cleaned_data['location_longitude'],
+                zoom=mapform.cleaned_data['zoom'],
+                tiles=mapform.cleaned_data['tiles'])
+            currmap.save()
+        if uploadform.is_valid():
+            filemap.makemapzip(request.FILES['file'], currmap)
+        return map(request, currmap)
+    else:
+        mapform = MapForm()
+        uploadform = UploadForm()
+        iconform = IconForm()
+    context = {
+        'uploadform': uploadform,
+        'mapform': mapform,
+        'iconform': iconform
+    }
+    return render(request, "mapthat/upload.html", context)
 
 
-def gallery(request):
-    return render(request, 'mapthat/gallery.html')
+def gallery(request, context={}):
+    return render(request, 'mapthat/gallery.html', context)
 
 
-def tutorial(request):
-    return render(request, 'mapthat/tutorial.html')
+def tutorial(request, context={}):
+    return render(request, 'mapthat/tutorial.html', context)

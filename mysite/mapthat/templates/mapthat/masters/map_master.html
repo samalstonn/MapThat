@@ -1,0 +1,81 @@
+{% extends 'mapthat/masters/master.html' %}
+
+{% load static %}
+
+{% block body %}
+<form class="ml-2" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="row mt-1">
+    <div class="col-lg-11 mt-3 mx-auto">
+      <div class="row">
+        <div class="col-sm-1">
+          <h2 class="text-primary">Map</h2>
+        </div>
+        <div class="col-sm-12 mt-1 mb-3">
+        </div>
+      </div>
+      <div class="card rounded-0 border-0 shadow">
+        <div class="card-body p-5">
+          <div class="form-inline">
+            {% for field in mapform %}
+            <div class="fieldWrapper mt-3 ml-2">
+              {{ field.errors }}
+              <div class="text-primary">{{ field.label_tag }} </div>{{ field}}
+              {% if field.help_text %}
+              <p class="help">{{ field.help_text|safe }}</p>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <p class="help mx-auto text-info text-center">The default map is centered at the United States</p>
+      </div>
+    </div>
+    <div class="col-lg-11 mt-3 mx-auto">
+      {% block markertype %} {% endblock %}
+    </div>
+    <p class="help mx-auto text-center mt-5 text-info ">Circle Markers are recommended for larger maps
+    </p>
+    <div class="col-lg-11 mx-auto">
+      <div class="row">
+        <div class="col-sm-1">
+          <h2 class="text-primary">Marker</h2>
+        </div>
+        <div class="col-sm-12 mt-1 mb-3">
+          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-sm btn-outline-primary active hover">
+              <a href="{% url 'mapthat:tutorial' %}" type="radio" class="text-white text-decoration-none" name="options"
+                id="option1" autocomplete="off" checked> Icon</a>
+            </label>
+            <label class="btn btn-sm btn-outline-primary hover">
+              <a href="{% url 'mapthat:tutorial' %}" class="text-decoration-none" type="radio" name="options"
+                id="option1" autocomplete="off" checked> Circle</a>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="card rounded-0 border-0 shadow">
+        <div class="card-body p-5">
+          <div class="form-inline">
+            {% for field in iconform %}
+            <div class="fieldWrapper mt-3 ml-2">
+              {{ field.errors }}
+              <div class="text-primary">{{ field.label_tag }} </div>{{ field}}
+              {% if field.help_text %}
+              <p class="help">{{ field.help_text|safe }}</p>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="col-lg-11 mx-auto mb-5">
+      <div class="row">
+        <input type="submit" class="btn btn-success mt-5 ml-2" value="Submit" />
+        <a href="{% url 'mapthat:tutorial' %}" class="btn btn-info mt-5 ml-2">Need Help?</a>
+      </div>
+    </div>
+</form>
+{% endblock %}

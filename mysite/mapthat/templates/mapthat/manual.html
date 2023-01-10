@@ -1,10 +1,15 @@
-{% extends 'mapthat/masters/master.html' %}
+{% extends 'mapthat/masters/map_master.html' %}
 
 {% block title %}
 Manual Entry
 {% endblock %}
 
+{% block topbar %}
+Manual Entry
+{% endblock %}
 
-{% block body %}
-<p>Welcome {{user.first_name}}. This is the manual entry page</p>
+{% block markertype %}
+<div class="mt-3">
+  <h2 class="text-primary">Markers</h2>
+</div>
 {% endblock %}

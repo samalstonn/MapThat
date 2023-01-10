@@ -1,10 +1,94 @@
 {% extends 'mapthat/masters/master.html' %}
+{% load static %}
 
 {% block title %}
 MapThat - Home
 {% endblock %}
 
+{% block topbar %}
+<p>Welcome to MapThat, {{user.first_name}}!</p>
+{% endblock %}
 
 {% block body %}
-<p>Welcome {{user.first_name}}</p>
+<p class="h3 mb-4 text-success mt-3">Get Started Here!</p>
+<div class="row container-fluid">
+  <div class="col">
+    <div class="card shadow mb-4">
+      <!-- Card Header - Dropdown -->
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Manual Entry</h6>
+      </div>
+      <!-- Card Body -->
+      <div class="card-body">
+        <div>
+          <img src="{% static 'mapthat/main/img/undraw_person_mapping2.svg' %}" class="mx-auto"
+            style="display: block; height: 216px; width: 318px;">
+        </div>
+        <hr>
+        <div class="container-fluid justify-content-center">
+          <p class="mr-5 text-info">Make your map yourself!</p>
+          <a href="{% url 'mapthat:manual' %}" class="btn btn-primary btn-icon-split">
+            <span class="text">Start Mapping</span>
+            <span class="icon">
+              <i class="fas fa-arrow-right"></i>
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card shadow mb-4">
+      <!-- Card Header - Dropdown -->
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">File Upload</h6>
+      </div>
+      <!-- Card Body -->
+      <div class="card-body">
+        <div>
+          <img src="{% static 'mapthat/main/img/undraw_upload_file.svg' %}" class="mx-auto"
+            style="display: block; height: 216px; width: 318px;">
+        </div>
+        <hr>
+        <div class="container-fluid justify-content-center">
+          <p class="mr-5 text-info">Upload a file to make things easier!</p>
+          <a href="{% url 'mapthat:upload' %}" class="btn btn-primary btn-icon-split">
+            <span class="text">Start Uploading</span>
+            <span class="icon">
+              <i class="fas fa-arrow-right"></i>
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p class="h3 mb-4 text-success">Need Some Help?</p>
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <div class="card shadow mb-4">
+      <!-- Card Header - Dropdown -->
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Tutorial</h6>
+      </div>
+      <!-- Card Body -->
+      <div class="card-body">
+        <div>
+          <img src="{% static 'mapthat/main/img/undraw_tutorial.svg' %}" class="mx-auto"
+            style="display: block; height: 216px; width: 318px;">
+        </div>
+        <hr>
+        <div class="container-fluid justify-content-center">
+          <p class="mr-5 text-info">Learn the ropes of MapThat with our tutorial!</p>
+          <a href="{% url 'mapthat:tutorial' %}" class="btn btn-primary btn-icon-split">
+            <span class="text">Find Out More</span>
+            <span class="icon">
+              <i class="fas fa-arrow-right"></i>
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
