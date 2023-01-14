@@ -3,7 +3,8 @@ from django.shortcuts import get_object_or_404
 from .models import Marker, Map
 
 
-def makemap(map, icon):
+def makemap(pk, icon):
+    currmap = get_object_or_404(Map, pk=pk)
     folmap = folium.Map(location=[map.location_latitude, map.location_longitude], zoom_start=map.zoom,
                         tiles=map.tiles,
                         attr=map.attr)
@@ -12,4 +13,5 @@ def makemap(map, icon):
         marker = folium.Marker(
             location=[m.latitude, m.longitude], popup=m.popup, icon=icon, tooltip=m.tooltip)
         folmap.add_child(marker)
+    print(folmap)
     return folmap

@@ -88,8 +88,7 @@ def login(request, context={}):
     return render(request, 'mapthat/login.html', context)
 
 
-def map(request, currmap, icon):
-    map = makemap(currmap, icon)
+def map(request, map):
     context = {
         'map': map.get_root().render()
     }
@@ -100,26 +99,32 @@ def manual(request, context={}):
     return render(request, 'mapthat/manual.html', context)
 
 
+attrib = '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+
+
 def upload(request):
     if request.method == 'POST':
         uploadform = UploadForm(request.POST, request.FILES)
         mapform = MapForm(request.POST)
         iconform = IconForm(request.POST)
         if mapform.is_valid():
-            currmap = Map(
+            currmap = Map.objects.create(
                 name=mapform.cleaned_data['name'],
                 location_latitude=mapform.cleaned_data['location_latitude'],
                 location_longitude=mapform.cleaned_data['location_longitude'],
                 zoom=mapform.cleaned_data['zoom'],
-                tiles=mapform.cleaned_data['tiles'])
+                tiles=mapform.cleaned_data['tiles'],
+                attr=attrib
+            )
             currmap.save()
         if uploadform.is_valid():
             if iconform.is_valid():
                 icon = folium.Icon(color=iconform.cleaned_data['color'],
                                    icon_color=iconform.cleaned_data['icon_color'],
                                    icon=iconform.cleaned_data['icon'], angle=0, prefix='fa')
-            newmap = filemap.makemapzip(request.FILES['file'], currmap)
-        return map(request, newmap, icon)
+            newmap = filemap.makemapzip(
+                request.FILES['file'], currmap.pk, icon)
+        return map(request, newmap)
     else:
         mapform = MapForm()
         uploadform = UploadForm()

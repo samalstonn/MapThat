@@ -3,13 +3,24 @@ import numpy as np
 from . import zipcode_map
 import random
 from .models import Map, Marker
+import folium
+from django.shortcuts import get_object_or_404
 
 colormap = {
     'Cornell University': 'darkblue',
 }
 
 
-def makemapzip(file, currmap):
+def makemapzip(file, pk, icon):
+    # Get the map
+    currmap = get_object_or_404(Map, pk=pk)
+    # Make the folium map
+    folmap = folium.Map(location=[currmap.location_latitude,
+                                  currmap.location_longitude],
+                        zoom_start=currmap.zoom,
+                        tiles=currmap.tiles,
+                        attr=currmap.attr)
+
     # Read in the data
     df = pd.read_excel(file)
     # Cut down the data to just the zip codes, popup, and tooltip
@@ -22,17 +33,22 @@ def makemapzip(file, currmap):
     # Convert to Records
     records = df.to_records()
     print(records)
-
     # Add the markers from records
     for record in records:
-        marker = Marker(
+        currmarker = Marker(
             latitude=record[1][0],
             longitude=record[1][1],
             popup=record[2],
             tooltip=record[3],
             map=currmap)
-        marker.save()
-    return currmap
+        currmarker.save()
+
+        folium.Marker(
+            location=[currmarker.latitude, currmarker.longitude],
+            popup=currmarker.popup,
+            icon=icon,
+            tooltip=currmarker.tooltip).add_to(folmap)
+    return folmap
 
 
 def makemapll(file, currmap):
