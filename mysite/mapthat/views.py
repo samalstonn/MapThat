@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import request
-from .forms import LoginForm, SignupForm, IconForm, MapForm, UploadForm, KeyForm
+from .forms import LoginForm, SignupForm, IconForm, MapForm, UploadForm, KeyForm, MarkerForm, CircleForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib import messages
@@ -102,13 +102,16 @@ def manual(request, context={}):
 def key(request, mappk, choices):
     if request.method == 'POST':
         keyform = KeyForm(request.POST)
+        iconform = IconForm(request.POST)
         if keyform.is_valid():
             key = keyform.cleaned_data['key']
             return project(request, makemap(map, key))
     else:
+        iconform = IconForm()
         keyform = KeyForm([('green', 'Green')])
     context = {
         'keyform': keyform,
+        'iconform': iconform,
     }
     return render(request, 'mapthat/key.html', context)
 

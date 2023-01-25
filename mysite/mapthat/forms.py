@@ -94,11 +94,22 @@ class IconForm(forms.Form):
         label='Icon Color', initial='white', choices=colorchoices)
 
 
+class CircleForm(forms.Form):
+    radius = forms.FloatField(label='Radius',
+                              widget=forms.TextInput(attrs={'placeholder': 3}))
+    outline = forms.ChoiceField(
+        label='Outline Color', initial='red', choices=colorchoices)
+    fill = forms.ChoiceField(
+        label='Fill Color', initial='red', choices=colorchoices)
+    opacity = forms.FloatField(label='Opacity', initial=0.5,
+                               widget=forms.TextInput(attrs={'placeholder': 0.5}))
+
+
 class KeyForm(forms.Form):
-    def __init__(self, newchoices, *args, **kwargs):
-        super(KeyForm, self).__init__(*args, **kwargs)
-        self.fields['tooltip'] = forms.ChoiceField(
-            choices=newchoices)
+    # def __init__(self, newchoices, *args, **kwargs):
+    #     super(KeyForm, self).__init__(*args, **kwargs)
+    #     self.fields['tooltip'] = forms.ChoiceField(
+    #         choices=newchoices)
 
     tooltip = forms.ChoiceField(label='Popup',
                                 choices=[('red', 'red'), ('blue', 'blue')], initial='red')
