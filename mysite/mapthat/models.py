@@ -46,3 +46,15 @@ class Marker(models.Model):
 
     def __str__(self):
         return self.popup
+
+
+class Icon(models.Model):
+    color = models.CharField(
+        max_length=100, default='red', choices=colorchoices)
+    icon_color = models.CharField(max_length=100, default='white')
+    icon = models.CharField(max_length=100, default='fa-bank')
+    angle = models.IntegerField(default=0)
+    prefix = models.CharField(max_length=100, default='fa')
+
+    def __str__(self):
+        return self.color

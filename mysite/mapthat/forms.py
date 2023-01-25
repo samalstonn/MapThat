@@ -88,13 +88,22 @@ class MarkerForm(forms.Form):
 
 
 class IconForm(forms.Form):
-
     icon = forms.CharField(label='Icon', required=False,
                            widget=forms.TextInput(attrs={'placeholder': 'fa-bank'}))
     icon_color = forms.ChoiceField(
         label='Icon Color', initial='white', choices=colorchoices)
+
+
+class KeyForm(forms.Form):
+    def __init__(self, newchoices, *args, **kwargs):
+        super(KeyForm, self).__init__(*args, **kwargs)
+        self.fields['tooltip'] = forms.ChoiceField(
+            choices=newchoices)
+
+    tooltip = forms.ChoiceField(label='Popup',
+                                choices=[('red', 'red'), ('blue', 'blue')], initial='red')
     color = forms.ChoiceField(
-        label='Outer Color', initial='red', choices=colorchoices)
+        label='Color', initial='red', choices=colorchoices)
 
 
 class UploadForm(forms.Form):

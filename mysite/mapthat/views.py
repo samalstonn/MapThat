@@ -1,12 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import request
-from .forms import LoginForm, SignupForm, IconForm, MapForm, UploadForm
+from .forms import LoginForm, SignupForm, IconForm, MapForm, UploadForm, KeyForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib import messages
 from django import forms
 from . import filemap
-from .models import Map, colorchoices
+from .models import Map, Icon
 from django.db.utils import IntegrityError
 from .makemap import makemap
 import folium
@@ -62,7 +62,7 @@ def signup(request):
 
 def login(request, context={}):
     if context:
-        return home(request, context)
+        return redirect('home')
     if request.method == 'POST':
         loginform = LoginForm(request.POST)
         if loginform.is_valid():
@@ -88,9 +88,9 @@ def login(request, context={}):
     return render(request, 'mapthat/login.html', context)
 
 
-def map(request, map):
+def project(request, m):
     context = {
-        'map': map.get_root().render()
+        'm': m.get_root().render()
     }
     return render(request, 'mapthat/map_template.html', context)
 
@@ -99,14 +99,27 @@ def manual(request, context={}):
     return render(request, 'mapthat/manual.html', context)
 
 
+def key(request, mappk, choices):
+    if request.method == 'POST':
+        keyform = KeyForm(request.POST)
+        if keyform.is_valid():
+            key = keyform.cleaned_data['key']
+            return project(request, makemap(map, key))
+    else:
+        keyform = KeyForm([('green', 'Green')])
+    context = {
+        'keyform': keyform,
+    }
+    return render(request, 'mapthat/key.html', context)
+
+
 attrib = '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 
 
 def upload(request):
+
     if request.method == 'POST':
-        uploadform = UploadForm(request.POST, request.FILES)
         mapform = MapForm(request.POST)
-        iconform = IconForm(request.POST)
         if mapform.is_valid():
             currmap = Map.objects.create(
                 name=mapform.cleaned_data['name'],
@@ -116,23 +129,17 @@ def upload(request):
                 tiles=mapform.cleaned_data['tiles'],
                 attr=attrib
             )
-            currmap.save()
+        uploadform = UploadForm(request.POST, request.FILES)
         if uploadform.is_valid():
-            if iconform.is_valid():
-                icon = folium.Icon(color=iconform.cleaned_data['color'],
-                                   icon_color=iconform.cleaned_data['icon_color'],
-                                   icon=iconform.cleaned_data['icon'], angle=0, prefix='fa')
-            newmap = filemap.makemapzip(
-                request.FILES['file'], currmap.pk, icon)
-        return map(request, newmap)
+            choices = filemap.get_choices_zip(request.FILES['file'])
+        return key(request, currmap.pk, choices)
+
     else:
         mapform = MapForm()
         uploadform = UploadForm()
-        iconform = IconForm()
     context = {
         'uploadform': uploadform,
         'mapform': mapform,
-        'iconform': iconform
     }
     return render(request, "mapthat/upload.html", context)
 

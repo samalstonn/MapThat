@@ -1,0 +1,67 @@
+{% extends 'mapthat/masters/master.html' %}
+{% load static %}
+
+{% block title %}
+Key
+{% endblock %}
+
+{% block topbar %}
+Create Key
+{% endblock %}
+
+{% block body %}
+<div class="col-lg-11 mx-auto mt-3">
+  <div class="row">
+    <div class="col-sm-1">
+      <h2 class="text-primary">Marker</h2>
+    </div>
+    <div class="col-sm-12 mt-1 mb-3">
+      <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <label class="btn btn-sm btn-outline-primary active hover">
+          <input type="radio" class="text-white text-decoration-none" name="options" id="option1" autocomplete="off"
+            checked> Icon</a>
+        </label>
+        <label class="btn btn-sm btn-outline-primary hover">
+          <a href="{% url 'mapthat:tutorial' %}" class="text-decoration-none" type="radio" name="options" id="option1"
+            autocomplete="off" checked> Circle</a>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="card rounded-0 border-0 shadow">
+    <div class="card-body p-5">
+      <div class="form-inline">
+        {% for field in iconform %}
+        <div class="fieldWrapper ml-2">
+          <div class="text-primary">{{ field.label_tag }} </div>{{ field}}
+          {% if field.help_text %}
+          <p class="help">{{ field.help_text|safe }}</p>
+          {% endif %}
+        </div>
+        {% endfor %}
+        <p class="help mx-auto text-info text-center mt-3 mb-0">Circle Markers are recommended for larger maps</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="col-lg-11 mt-3 mx-auto">
+  <div class="row">
+    <div class="col-sm-1 mb-1">
+      <h2 class="text-primary">Key</h2>
+    </div>
+  </div>
+  <div class="card rounded-0 border-0 shadow">
+    <div class="card-body p-5">
+      <div class="form-inline">
+        {% for field in keyform %}
+        <div class="fieldWrapper mt-3 ml-2">
+          <div class="text-primary">{{ field.label_tag }} </div>
+          {{ field }}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
